@@ -31,17 +31,14 @@ class AppState extends State<App> {
           '563492ad6f91700001000001e00b21ab6afb45a18c1d44a759556f14'
     });
     //IO-Bound (tem também CPU-Bound)
-    req.send().then((result) {
-      http.Response.fromStream(result).then((response) {
-        if (response.statusCode == 200) {
-          var decodedJSON = json.decode(response.body);
-          var imagem = ImageModel.fromJSON(decodedJSON);
-          print(imagem);
-        } else {
-          print("Deu errado: ${response.statusCode}");
-        }
-      });
-    });
+    final result = await req.send();
+    if (result.statusCode == 200){
+      // converter de streamedresponse para response
+      final response = await http.Response.fromStream(result);
+      final decodedJSON = json.decode(response.body);
+      final imagem = ImagemModel.fromJSON(decodeJSON);
+      print (imagem);
+    }
   }
 
   @override
